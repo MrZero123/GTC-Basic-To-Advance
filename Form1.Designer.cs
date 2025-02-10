@@ -30,24 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label1 = new System.Windows.Forms.Label();
             this.guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
             this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2TextBox2 = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
+            this.error = new Guna.UI2.WinForms.Guna2MessageDialog();
+            this.info = new Guna.UI2.WinForms.Guna2MessageDialog();
+            this.warn = new Guna.UI2.WinForms.Guna2MessageDialog();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(254, 385);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Hello World!";
             // 
             // guna2BorderlessForm1
             // 
@@ -159,6 +151,34 @@
             this.guna2Button1.Size = new System.Drawing.Size(180, 45);
             this.guna2Button1.TabIndex = 4;
             this.guna2Button1.Text = "Login";
+            this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
+            // 
+            // error
+            // 
+            this.error.Buttons = Guna.UI2.WinForms.MessageDialogButtons.OK;
+            this.error.Caption = "GTC CHE3TS";
+            this.error.Icon = Guna.UI2.WinForms.MessageDialogIcon.Error;
+            this.error.Parent = this;
+            this.error.Style = Guna.UI2.WinForms.MessageDialogStyle.Dark;
+            this.error.Text = null;
+            // 
+            // info
+            // 
+            this.info.Buttons = Guna.UI2.WinForms.MessageDialogButtons.OK;
+            this.info.Caption = "GTC CHE3TS";
+            this.info.Icon = Guna.UI2.WinForms.MessageDialogIcon.Information;
+            this.info.Parent = this;
+            this.info.Style = Guna.UI2.WinForms.MessageDialogStyle.Dark;
+            this.info.Text = null;
+            // 
+            // warn
+            // 
+            this.warn.Buttons = Guna.UI2.WinForms.MessageDialogButtons.OK;
+            this.warn.Caption = "GTC CHE3TS";
+            this.warn.Icon = Guna.UI2.WinForms.MessageDialogIcon.Warning;
+            this.warn.Parent = this;
+            this.warn.Style = Guna.UI2.WinForms.MessageDialogStyle.Dark;
+            this.warn.Text = null;
             // 
             // Form1
             // 
@@ -169,24 +189,25 @@
             this.Controls.Add(this.guna2Button1);
             this.Controls.Add(this.guna2TextBox2);
             this.Controls.Add(this.guna2TextBox1);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.guna2PictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
         private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
         private Guna.UI2.WinForms.Guna2TextBox guna2TextBox2;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
+        private Guna.UI2.WinForms.Guna2MessageDialog error;
+        private Guna.UI2.WinForms.Guna2MessageDialog info;
+        private Guna.UI2.WinForms.Guna2MessageDialog warn;
     }
 }
 
