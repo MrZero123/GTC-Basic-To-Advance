@@ -49,7 +49,7 @@ namespace BasicToAdvance_01
         }
         private static string apiUrl = "https://gtccheats.shop/Blacklist/Login/api.php"; // Do Not Change This URL
         private static string Checkblack = "https://gtccheats.shop/Blacklist/Login/CheckBlack.php"; // Do Not Change This URL
-        private static string privateKey = "e0ae16f760bc92bb1d3aa368a1d328cb"; // Replace with actual key
+        private static string privateKey = "Your Private Key Here"; // Replace with actual key
         #region BlacklistChecking
         static async Task<bool> CheckBlacklistStatus()
         {
