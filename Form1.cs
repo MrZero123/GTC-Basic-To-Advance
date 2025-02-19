@@ -20,6 +20,7 @@ using System.Diagnostics;
 
 namespace BasicToAdvance_01
 {
+
     public partial class Form1 : Form
     {
         private int failedLoginAttempts = 0; // Track failed login attempts
@@ -34,11 +35,11 @@ namespace BasicToAdvance_01
         {
             InitializeComponent();
             KeyAuthApp.init();
-            if (KeyAuthApp.checkblack())
+          /*  if (KeyAuthApp.checkblack())
             {
                 MessageBox.Show("User Blacklist!");
                 Environment.Exit(0);  // terminate program if user blacklisted.
-            }
+            }*/
 
         }
 
@@ -46,30 +47,92 @@ namespace BasicToAdvance_01
         {
 
         }
+        private static string apiUrl = "https://gtccheats.shop/Blacklist/Login/api.php"; // Do Not Change This URL
+        private static string Checkblack = "https://gtccheats.shop/Blacklist/Login/CheckBlack.php"; // Do Not Change This URL
+        private static string privateKey = "e0ae16f760bc92bb1d3aa368a1d328cb"; // Replace with actual key
+        #region BlacklistChecking
+        static async Task<bool> CheckBlacklistStatus()
+        {
+            string hwid = ForHWIDBlack();
+            string ip = await IPForBlacklisted();
+            string url = $"{Checkblack}?key={privateKey}&hwid={hwid}&ip={ip}";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string response = await client.GetStringAsync(url);
+                    return response.Contains("BLACKLISTED");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+
+        static async Task<bool> AddToBlacklist(string hwid, string ip, string reason, int expiry)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var content = new FormUrlEncodedContent(new[]
+                    {
+                    new KeyValuePair<string, string>("key", privateKey),
+                    new KeyValuePair<string, string>("hwid", hwid),
+                    new KeyValuePair<string, string>("ip", ip),
+                    new KeyValuePair<string, string>("reason", reason),
+                    new KeyValuePair<string, string>("expiry", expiry.ToString())
+                });
+
+                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                    string result = await response.Content.ReadAsStringAsync();
+
+                    return result.Contains("SUCCESS"); // Adjust based on actual API response
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+
+        static string ForHWIDBlack()
+        {
+            return System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
+        }
+
+
+        static async Task<string> IPForBlacklisted()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                return await client.GetStringAsync("https://api64.ipify.org");
+            }
+        }
+     
+        #endregion
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            bool isBlacklisted = await CheckBlacklistStatus();
 
-            string hwid = GetHWID();
-            string ip = GetLocalIpAddress();
-            string result = await BlacklistChecker.CheckIfBlacklisted(hwid, ip);
-            if (result == "blacklisted")
+            if (isBlacklisted)
             {
                 error.Show("The user is blacklisted.");
                 await Task.Delay(2000);
                 Environment.Exit(0);
             }
-            else if (result == "not_blacklisted")
-            {
-                info.Show("Welcome Back :" + Environment.UserName);
-            }
             else
             {
-                warn.Show("An error occurred while checking the blacklist status.");
+                info.Show("Welcome Back :" + Environment.UserName);
+
             }
 
         }
-
         #region DiscordWebHook
         private string GetSID(string userName)
         {
@@ -159,34 +222,10 @@ namespace BasicToAdvance_01
             IPAddress ipAddress = host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
             return ipAddress?.ToString() ?? "";
         }
-        private async Task BlacklistUser(string hwid, string ip, string reason)
-        {
-            string blacklistUrl = "https://gtccheats.shop/Blacklist/add_to_blacklist.php";
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    string url = $"{blacklistUrl}?hwid={hwid}&ip={ip}&reason={reason}";
-                    var response = await client.GetAsync(url);
-                    if (response.IsSuccessStatusCode)
-                    {   
-                        error.Show("User blacklisted successfully.");
-                    }
-                    else
-                    {    
-                        string errorMessage = await response.Content.ReadAsStringAsync();
-                        MessageBox.Show($"Error blacklisting user. Status Code: {response.StatusCode}\nError Message: {errorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error blacklisting user: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+  
         private async Task SendLicenseWebhook(string username, string password)
         {
-            string webhookUrl = "https://discord.com/api/webhooks/1339693723952611399/rRwT9QLBLyO5ZF8Vp5hBLQzOoAyp6HS1TTYR8cpkIbtC0s4kib58nUF6APpEFjTS_5FC";
+            string webhookUrl = "https://discord.com/api/webhooks/1341562447420457012/nsMIUjt4adBzv-sAS-qu6m5hzB2WEF-AueHxH8fPvNNALg64bNjo8UPTiY7sHQFFbmRg";
             string hwid = GetHWID();
 
             var embed = new
@@ -251,9 +290,10 @@ namespace BasicToAdvance_01
                 failedLoginAttempts++;
                 if (failedLoginAttempts >= 3)
                 {  
-                    string hwid = GetHWID();
-                    string ip = GetLocalIpAddress();
-                    await BlacklistUser(hwid, ip, "Multiple failed login attempts");
+                    string hwid = ForHWIDBlack();
+                    string ip = await IPForBlacklisted();
+                    int expiry = 1; // 0 means never expire [If You Enter 1 = 1Day , 2 = 2Day , 0 = Lifetime]
+                    await AddToBlacklist(hwid, ip, "Multiple failed login attempts", expiry);
                     error.Show("You have been blacklisted due to multiple failed login attempts.");
                     await Task.Delay(2000);
                     Environment.Exit(0);
