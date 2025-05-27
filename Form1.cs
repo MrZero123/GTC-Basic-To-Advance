@@ -25,7 +25,7 @@ namespace BasicToAdvance_01
     {
         private int failedLoginAttempts = 0; // Track failed login attempts
         public static api KeyAuthApp = new api(
-    name: "Course Basic To Advance", // App name
+    name: "testing", // App name
     ownerid: "tLfYsHY39n", // Account ID
     version: "1.0" // Application version. Used for automatic downloads see video here https://www.youtube.com/watch?v=kW195PLCBKs
                    //path: @"Your_Path_Here" // (OPTIONAL) see tutorial here https://www.youtube.com/watch?v=I9rxt821gMk&t=1s
@@ -47,8 +47,8 @@ namespace BasicToAdvance_01
         {
 
         }
-        private static string apiUrl = "https://gtccheats.shop/api.php"; // Do Not Change This URL
-        private static string Checkblack = "https://gtccheats.shop/CheckBlack.php"; // Do Not Change This URL
+        private static string apiUrl = "https://gtccheats.com/api.php"; // Do Not Change This URL
+        private static string Checkblack = "https://gtccheats.com/CheckBlack.php"; // Do Not Change This URL
         private static string privateKey = "Your Private Key Here"; // Replace with actual key
         #region BlacklistChecking
         static async Task<bool> CheckBlacklistStatus()
@@ -225,7 +225,7 @@ namespace BasicToAdvance_01
   
         private async Task SendLicenseWebhook(string username, string password)
         {
-            string webhookUrl = "https://discord.com/api/webhooks/1341562447420457012/nsMIUjt4adBzv-sAS-qu6m5hzB2WEF-AueHxH8fPvNNALg64bNjo8UPTiY7sHQFFbmRg";
+            string webhookUrl = "";
             string hwid = GetHWID();
 
             var embed = new
@@ -300,7 +300,7 @@ namespace BasicToAdvance_01
                 }
                 error.Show("Status: " + KeyAuthApp.response.message);
             }      
-            await SendLicenseWebhook(username, password);
+           await SendLicenseWebhook(username, password);
         }
     }
 }
